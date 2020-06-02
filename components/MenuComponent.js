@@ -9,6 +9,7 @@ class Menu extends Component {
       dishes: DISHES,
     };
   }
+
   static navigationOptions = {
     title: "Menu",
   };
