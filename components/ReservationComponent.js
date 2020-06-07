@@ -12,6 +12,15 @@ import {
 import DatePicker from "react-native-datepicker";
 
 class Reservation extends Component {
+  constructor(props) {
+    super(props);
+    this.state = this.defaultState();
+  }
+
+  static navigationOptions = {
+    title: "Reserve Table",
+  };
+
   defaultState() {
     return {
       guests: 1,
@@ -20,16 +29,6 @@ class Reservation extends Component {
       showModal: false,
     };
   }
-
-  constructor(props) {
-    super(props);
-    this.defaultState;
-    this.state = this.defaultState();
-  }
-
-  static navigationOptions = {
-    title: "Reserve Table",
-  };
 
   toggleModal() {
     this.setState({ showModal: !this.state.showModal });
@@ -113,11 +112,9 @@ class Reservation extends Component {
           transparent={false}
           visible={this.state.showModal}
           onDismiss={() => {
-            this.toggleModal();
             this.resetForm();
           }}
           onRequestClose={() => {
-            this.toggleModal();
             this.resetForm();
           }}
         >
@@ -134,7 +131,6 @@ class Reservation extends Component {
             </Text>
             <Button
               onPress={() => {
-                this.toggleModal();
                 this.resetForm();
               }}
               color="#512DA8"
