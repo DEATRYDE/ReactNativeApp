@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { ScrollView, View, Text, FlatList } from "react-native";
+import { FlatList, ScrollView, Text, View } from "react-native";
 import { Card, ListItem } from "react-native-elements";
 import { connect } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
+import { Loading } from "./LoadingComponent";
 
 const mapStateToProps = (state) => {
   return {
@@ -28,8 +29,9 @@ function History() {
   );
 }
 
-function Leaders(props) {
+function CorporateLeadership(props) {
   const leaders = props.leaders;
+
   if (leaders != null) {
     const renderLeader = ({ item, index }) => {
       return (
@@ -38,21 +40,29 @@ function Leaders(props) {
           title={item.name}
           titleStyle={{ fontWeight: "bold" }}
           subtitle={item.description}
-          subtitleStyle={{ color: "#6c757d" }}
+          subtitleStyle={{ color: "#6c757d" }} // #6c757d taken from Bootstrap blockquote-footer CSS
           hideChevron={true}
           leftAvatar={{ source: { uri: baseUrl + item.image } }}
         />
       );
     };
-    return (
-      <Card title="Corporate Leadership">
+
+    let corporateLeaderCardBody;
+    if (props.isLoading) {
+      corporateLeaderCardBody = <Loading />;
+    } else if (props.errMess) {
+      corporateLeaderCardBody = <Text>{props.errMess}</Text>;
+    } else {
+      corporateLeaderCardBody = (
         <FlatList
           data={leaders}
           renderItem={renderLeader}
           keyExtractor={(item) => item.id.toString()}
         />
-      </Card>
-    );
+      );
+    }
+
+    return <Card title="Corporate Leadership">{corporateLeaderCardBody}</Card>;
   } else {
     return <View></View>;
   }
@@ -67,7 +77,11 @@ class About extends Component {
     return (
       <ScrollView>
         <History />
-        <Leaders leaders={this.props.leaders.leaders} />
+        <CorporateLeadership
+          leaders={this.props.leaders.leaders}
+          isLoading={this.props.leaders.isLoading}
+          errMess={this.props.leaders.errMess}
+        />
       </ScrollView>
     );
   }

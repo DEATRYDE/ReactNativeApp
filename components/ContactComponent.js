@@ -10,7 +10,7 @@ class Contact extends Component {
   render() {
     return (
       <Card title="Contact Information">
-        <Text style={{ margin: 1, lineHeight: 50, fontSize: 18 }}>
+        <Text style={{ margin: 10, lineHeight: 50, fontSize: 18 }}>
           {`121, Clear Water Bay Road
 Clear Water Bay, Kowloon
 HONG KONG

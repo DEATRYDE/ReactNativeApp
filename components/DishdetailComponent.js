@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, ScrollView, FlatList } from "react-native";
+import { View, Text, ScrollView, FlatList } from "react-native";
 import { Card, Icon } from "react-native-elements";
 import { connect } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
@@ -17,7 +17,7 @@ function RenderDish(props) {
   if (dish != null) {
     return (
       <Card featuredTitle={dish.name} image={{ uri: baseUrl + dish.image }}>
-        ><Text style={{ margin: 10 }}>{dish.description}</Text>
+        <Text style={{ margin: 10 }}>{dish.description}</Text>
         <Icon
           raised
           reverse
@@ -25,7 +25,7 @@ function RenderDish(props) {
           type="font-awesome"
           color="#f50"
           onPress={() =>
-            props.favorite ? console.log("Already favorite") : props.onPress()
+            props.favorite ? console.log("Already favorited") : props.onPress()
           }
         />
       </Card>
@@ -44,28 +44,32 @@ function RenderComments(props) {
         <Text style={{ fontSize: 14 }}>{item.comment}</Text>
         <Text style={{ fontSize: 12 }}>{item.rating} Stars</Text>
         <Text style={{ fontSize: 12 }}>
-          {"-- " + item.author + ", " + item.date}{" "}
+          {"--" + item.author + ", " + item.date}
         </Text>
       </View>
     );
   };
 
-  return (
-    <Card title="Comments">
-      <FlatList
-        data={comments}
-        renderItem={renderCommentItem}
-        keyExtractor={(item) => item.id.toString()}
-      />
-    </Card>
-  );
+  if (comments != null) {
+    return (
+      <Card title="Comments">
+        <FlatList
+          data={comments}
+          renderItem={renderCommentItem}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      </Card>
+    );
+  } else {
+    return <View></View>;
+  }
 }
 
 class Dishdetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      favorites: [],
+      favorites: [], // dishId selected by user
     };
   }
 

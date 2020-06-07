@@ -1,9 +1,4 @@
 import React, { Component } from "react";
-import Menu from "./MenuComponent";
-import Home from "./HomeComponent";
-import Contact from "./ContactComponent";
-import About from "./AboutComponent";
-import Dishdetail from "./DishdetailComponent";
 import {
   View,
   Platform,
@@ -12,19 +7,24 @@ import {
   ScrollView,
   Text,
 } from "react-native";
+import { Icon } from "react-native-elements";
+import Menu from "./MenuComponent";
+import Dishdetail from "./DishdetailComponent";
+import Home from "./HomeComponent";
+import Contact from "./ContactComponent";
+import About from "./AboutComponent";
 import {
-  createStackNavigator,
   createDrawerNavigator,
+  createStackNavigator,
   DrawerItems,
   SafeAreaView,
 } from "react-navigation";
-import { Icon } from "react-native-elements";
 import { connect } from "react-redux";
 import {
-  fetchDishes,
   fetchComments,
-  fetchPromos,
+  fetchDishes,
   fetchLeaders,
+  fetchPromos,
 } from "../redux/ActionCreators";
 
 const mapStateToProps = (state) => {
@@ -32,10 +32,10 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchDishes: () => dispatch(fetchDishes()),
   fetchComments: () => dispatch(fetchComments()),
-  fetchPromos: () => dispatch(fetchPromos()),
+  fetchDishes: () => dispatch(fetchDishes()),
   fetchLeaders: () => dispatch(fetchLeaders()),
+  fetchPromos: () => dispatch(fetchPromos()),
 });
 
 const MenuNavigator = createStackNavigator(
@@ -43,6 +43,7 @@ const MenuNavigator = createStackNavigator(
     Menu: {
       screen: Menu,
       navigationOptions: ({ navigation }) => ({
+        // navigationOptions can be an object or be a function that takes in props
         headerLeft: (
           <Icon
             name="menu"
@@ -94,19 +95,19 @@ const HomeNavigator = createStackNavigator(
   }
 );
 
-const AboutNavigator = createStackNavigator(
+const ContactNavigator = createStackNavigator(
   {
-    Home: { screen: About },
+    Contact: { screen: Contact },
   },
   {
     navigationOptions: ({ navigation }) => ({
       headerStyle: {
         backgroundColor: "#512DA8",
       },
+      headerTintColor: "#fff",
       headerTitleStyle: {
         color: "#fff",
       },
-      headerTintColor: "#fff",
       headerLeft: (
         <Icon
           name="menu"
@@ -119,19 +120,19 @@ const AboutNavigator = createStackNavigator(
   }
 );
 
-const ContactNavigator = createStackNavigator(
+const AboutNavigator = createStackNavigator(
   {
-    Home: { screen: Contact },
+    About: { screen: About },
   },
   {
     navigationOptions: ({ navigation }) => ({
       headerStyle: {
         backgroundColor: "#512DA8",
       },
+      headerTintColor: "#fff",
       headerTitleStyle: {
         color: "#fff",
       },
-      headerTintColor: "#fff",
       headerLeft: (
         <Icon
           name="menu"
@@ -161,7 +162,7 @@ const CustomDrawerContentComponent = (props) => (
           <Text style={styles.drawerHeaderText}>Ristorante Con Fusion</Text>
         </View>
       </View>
-      <DrawerItems {...props} />
+      <DrawerItems {...props}></DrawerItems>
     </SafeAreaView>
   </ScrollView>
 );
@@ -173,7 +174,7 @@ const MainNavigator = createDrawerNavigator(
       navigationOptions: {
         title: "Home",
         drawerLabel: "Home",
-        drawerIcon: ({ tintColor, focused }) => (
+        drawerIcon: ({ tintColor }) => (
           <Icon name="home" type="font-awesome" size={24} color={tintColor} />
         ),
       },
@@ -183,11 +184,21 @@ const MainNavigator = createDrawerNavigator(
       navigationOptions: {
         title: "Menu",
         drawerLabel: "Menu",
-        drawerIcon: ({ tintColor, focused }) => (
+        drawerIcon: ({ tintColor }) => (
+          <Icon name="list" type="font-awesome" size={24} color={tintColor} />
+        ),
+      },
+    },
+    Contact: {
+      screen: ContactNavigator,
+      navigationOptions: {
+        title: "Contact Us",
+        drawerLabel: "Contact Us",
+        drawerIcon: ({ tintColor }) => (
           <Icon
-            name="info-circle"
+            name="address-card"
             type="font-awesome"
-            size={24}
+            size={22} // 24 seems a bit big
             color={tintColor}
           />
         ),
@@ -198,21 +209,11 @@ const MainNavigator = createDrawerNavigator(
       navigationOptions: {
         title: "About Us",
         drawerLabel: "About Us",
-        drawerIcon: ({ tintColor, focused }) => (
-          <Icon name="list" type="font-awesome" size={24} color={tintColor} />
-        ),
-      },
-    },
-    Contact: {
-      screen: ContactNavigator,
-      navigationOptions: {
-        title: "Contact Us",
-        drawerLabel: "Contact Us",
-        drawerIcon: ({ tintColor, focused }) => (
+        drawerIcon: ({ tintColor }) => (
           <Icon
-            name="address-card"
+            name="info-circle"
             type="font-awesome"
-            size={22}
+            size={24}
             color={tintColor}
           />
         ),
@@ -227,10 +228,10 @@ const MainNavigator = createDrawerNavigator(
 
 class Main extends Component {
   componentDidMount() {
-    this.props.fetchDishes();
     this.props.fetchComments();
-    this.props.fetchPromos();
+    this.props.fetchDishes();
     this.props.fetchLeaders();
+    this.props.fetchPromos();
   }
 
   render() {
