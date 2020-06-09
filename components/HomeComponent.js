@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, Animated, Easing } from "react-native";
+import { View, Text, Animated, Easing } from "react-native";
 import { Card } from "react-native-elements";
 import { connect } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
@@ -48,6 +48,7 @@ class Home extends Component {
     super(props);
     this.animatedValue = new Animated.Value(0);
   }
+
   static navigationOptions = {
     title: "Home",
   };
@@ -70,10 +71,12 @@ class Home extends Component {
       inputRange: [0, 1, 3, 5, 8],
       outputRange: [1200, 600, 0, -600, -1200],
     });
+
     const xpos2 = this.animatedValue.interpolate({
       inputRange: [0, 2, 4, 6, 8],
       outputRange: [1200, 600, 0, -600, -1200],
     });
+
     const xpos3 = this.animatedValue.interpolate({
       inputRange: [0, 3, 5, 7, 8],
       outputRange: [1200, 600, 0, -600, -1200],
@@ -87,7 +90,7 @@ class Home extends Component {
           <RenderItem
             item={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
             isLoading={this.props.dishes.isLoading}
-            erreMess={this.props.dishes.erreMess}
+            errMess={this.props.dishes.errMess}
           />
         </Animated.View>
         <Animated.View
@@ -100,7 +103,7 @@ class Home extends Component {
               )[0]
             }
             isLoading={this.props.promotions.isLoading}
-            erreMess={this.props.promotions.erreMess}
+            errMess={this.props.promotions.errMess}
           />
         </Animated.View>
         <Animated.View
@@ -111,7 +114,7 @@ class Home extends Component {
               this.props.leaders.leaders.filter((leader) => leader.featured)[0]
             }
             isLoading={this.props.leaders.isLoading}
-            erreMess={this.props.leaders.erreMess}
+            errMess={this.props.leaders.errMess}
           />
         </Animated.View>
       </View>
