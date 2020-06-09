@@ -31,6 +31,8 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 function RenderDish({ dish, favorite, markFavorite, openCommentForm }) {
+  handleViewRef = (ref) => (this.view = ref);
+
   const recognizeDrag = ({ moveX, moveY, dx, dy }) => {
     if (dx < -200) return true; // Right to left
     return false;
@@ -40,6 +42,13 @@ function RenderDish({ dish, favorite, markFavorite, openCommentForm }) {
     onStartShouldSetPanResponder: (e, gestureState) => {
       return true;
     },
+    onPanResponderGrant: () => {
+      this.view
+        .rubberBand(1000)
+        .then((endState) =>
+          console.log(endState.finised ? "finished" : "cancelled")
+        );
+    },
     onPanResponderEnd: (e, gestureState) => {
       if (recognizeDrag(gestureState))
         Alert.alert(
@@ -48,7 +57,7 @@ function RenderDish({ dish, favorite, markFavorite, openCommentForm }) {
           [
             {
               text: "Cancel",
-              onPress: () => console.log("Cancel button pressed."),
+              onPress: () => console.log("Cancel button pressed"),
               style: "cancel",
             },
             {
@@ -68,6 +77,7 @@ function RenderDish({ dish, favorite, markFavorite, openCommentForm }) {
       <Animatable.View
         animation="fadeInDown"
         duration={2000}
+        ref={this.handleViewRef}
         {...panResponder.panHandlers}
       >
         <Card featuredTitle={dish.name} image={{ uri: baseUrl + dish.image }}>
