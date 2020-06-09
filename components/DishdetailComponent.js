@@ -7,6 +7,8 @@ import {
   FlatList,
   Modal,
   Button,
+  Alert,
+  PanResponder,
 } from "react-native";
 import { Card, Icon, Rating, Input } from "react-native-elements";
 import { connect } from "react-redux";
@@ -29,9 +31,45 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 function RenderDish({ dish, favorite, markFavorite, openCommentForm }) {
+  const recognizeDrag = ({ moveX, moveY, dx, dy }) => {
+    if (dx < -200) return true; // Right to left
+    return false;
+  };
+
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: (e, gestureState) => {
+      return true;
+    },
+    onPanResponderEnd: (e, gestureState) => {
+      if (recognizeDrag(gestureState))
+        Alert.alert(
+          "Add to Favorites?",
+          "Are you sure you wish to add " + dish.name + " to your favorites?",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel button pressed."),
+              style: "cancel",
+            },
+            {
+              text: "OK",
+              onPress: () =>
+                favorite ? console.log("Already favorited") : markFavorite(),
+            },
+          ],
+          { cancelable: false }
+        );
+      return true;
+    },
+  });
+
   if (dish != null) {
     return (
-      <Animatable.View animation="fadeInDown" duration={2000}>
+      <Animatable.View
+        animation="fadeInDown"
+        duration={2000}
+        {...panResponder.panHandlers}
+      >
         <Card featuredTitle={dish.name} image={{ uri: baseUrl + dish.image }}>
           <Text style={{ margin: 10 }}>{dish.description}</Text>
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
