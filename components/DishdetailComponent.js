@@ -6,6 +6,7 @@ import {
   Modal,
   PanResponder,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   View,
@@ -24,11 +25,13 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   postFavorite: (dishId) => dispatch(postFavorite(dishId)),
+  // eslint-disable-next-line max-len
   postComment: (dishId, rating, author, comment) =>
     dispatch(postComment(dishId, rating, author, comment)),
 });
 
 function RenderDish({ dish, favorite, markFavorite, openCommentForm }) {
+  // eslint-disable-next-line no-undef
   handleViewRef = null;
 
   const recognizeDrag = ({ dx }) => {
@@ -56,6 +59,7 @@ function RenderDish({ dish, favorite, markFavorite, openCommentForm }) {
             },
             {
               text: "OK",
+              // eslint-disable-next-line no-confusing-arrow, no-console
               onPress: () =>
                 favorite ? console.log("Already favorited") : markFavorite(),
             },
@@ -68,6 +72,19 @@ function RenderDish({ dish, favorite, markFavorite, openCommentForm }) {
       return true;
     },
   });
+
+  const shareDish = (title, message, url) => {
+    Share.share(
+      {
+        title,
+        message: `${title}: ${message} ${url}`,
+        url,
+      },
+      {
+        dialogTitle: `Share ${title}`,
+      }
+    );
+  };
 
   if (dish != null) {
     return (
@@ -87,6 +104,7 @@ function RenderDish({ dish, favorite, markFavorite, openCommentForm }) {
               name={favorite ? "heart" : "heart-o"}
               type="font-awesome"
               color="#f50"
+              // eslint-disable-next-line no-confusing-arrow, no-console
               onPress={() =>
                 favorite ? console.log("Already favorited") : markFavorite()
               }
@@ -98,6 +116,16 @@ function RenderDish({ dish, favorite, markFavorite, openCommentForm }) {
               type="font-awesome"
               color="#512DA8"
               onPress={() => openCommentForm()}
+            />
+            <Icon
+              raised
+              reverse
+              name="share"
+              type="font-awesome"
+              color="#51D2A8"
+              onPress={() =>
+                shareDish(dish.name, dish.description, baseUrl + dish.image)
+              }
             />
           </View>
         </Card>
