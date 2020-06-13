@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import {
-  View,
-  Platform,
   Image,
-  StyleSheet,
+  NetInfo,
+  Platform,
   ScrollView,
+  StyleSheet,
   Text,
+  ToastAndroid,
+  View,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import Menu from "./MenuComponent";
@@ -351,13 +353,56 @@ class Main extends Component {
     this.props.fetchDishes();
     this.props.fetchLeaders();
     this.props.fetchPromos();
+
+    NetInfo.getConnectionInfo().then((connectionInfo) => {
+      ToastAndroid.show(
+        `Initial Network Connectivity Type: ${connectionInfo.type}, effectiveType: ${connectionInfo.effectiveType}`,
+        ToastAndroid.LONG
+      );
+    });
+
+    NetInfo.addEventListener("connectionChange", this.handleConnectivityChange);
   }
+
+  componentWillUnmount() {
+    NetInfo.removeEventListener(
+      "connectionChange",
+      this.handleConnectivityChange
+    );
+  }
+
+  handleConnectivityChange = (connectionInfo) => {
+    switch (connectionInfo.type) {
+      case "none":
+        ToastAndroid.show("You are now offline!", ToastAndroid.LONG);
+        break;
+      case "wifi":
+        ToastAndroid.show("You are now connected to WiFi!", ToastAndroid.LONG);
+        break;
+      case "cellular":
+        ToastAndroid.show(
+          "You are now connected to Cellular!",
+          ToastAndroid.LONG
+        );
+        break;
+      case "unknown":
+        ToastAndroid.show(
+          "You now have an unknown connection!",
+          ToastAndroid.LONG
+        );
+        break;
+      default:
+        break;
+    }
+  };
 
   render() {
     return (
       <View
         style={{
           flex: 1,
+          paddingTop:
+            Platform.OS === "ios" ? 0 : Expo.Constants.statusBarHeight,
         }}
       >
         <MainNavigator />
